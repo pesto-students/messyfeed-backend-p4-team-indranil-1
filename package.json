@@ -1,0 +1,29 @@
+{
+  "name": "messyfeed-apis",
+  "version": "1.0.0",
+  "description": "mess management project",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pradipbedre/Messyfeed-apis.git"
+  },
+  "author": "pradip bedre, dhanunjaya, rajesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pradipbedre/Messyfeed-apis/issues"
+  },
+  "homepage": "https://github.com/pradipbedre/Messyfeed-apis#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mon": "^0.0.8",
+    "mongoose": "^6.8.0",
+    "node": "^19.3.0"
+  }
+}
