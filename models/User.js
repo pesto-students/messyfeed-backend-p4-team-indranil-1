@@ -23,6 +23,7 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: ["owner", "admin"],
+      default: "owner",
     },
     address: {
       type: String,
