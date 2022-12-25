@@ -59,7 +59,6 @@ const customerSchema = new mongoose.Schema(
     },
     planId: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

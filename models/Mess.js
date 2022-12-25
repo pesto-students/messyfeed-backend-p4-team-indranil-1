@@ -11,10 +11,6 @@ const messSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     contactNo: {
       type: Number,
       required: true,
@@ -23,9 +19,18 @@ const messSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    pincode: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     photos: {
       type: [String],
       default: [],
+    },
+    userId: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
