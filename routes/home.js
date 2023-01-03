@@ -1,6 +1,8 @@
 import express from "express";
 
-import { search } from "../controllers/home.js";
+import { addReview, getReviews, search } from "../controllers/home.js";
+
+import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
@@ -8,6 +10,9 @@ const router = express.Router();
 router.get("/search", search);
 
 //Give a review for the mess
-router.post("/review");
+router.post("/review", addReview);
+
+//Get all reviews
+router.get("/reviews/:id", getReviews);
 
 export default router;

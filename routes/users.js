@@ -1,11 +1,24 @@
 import express from "express";
-import { addMess } from "../controllers/user.js";
-import {} from "../controllers/user.js";
+import {
+  deleteReview,
+  deleteUser,
+  getUser,
+  updateUser,
+} from "../controllers/user.js";
 import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
-//Register mess
-router.post("/", verifyToken, addMess);
+//Update User
+router.put("/:id", verifyToken, updateUser);
+
+//Delete User
+router.delete("/:id", verifyToken, deleteUser);
+
+//get an User
+router.get("/:id", verifyToken, getUser);
+
+//Delete the review
+router.delete("/review/:id", verifyToken, deleteReview);
 
 export default router;

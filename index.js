@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import messRoutes from "./routes/mess.js";
+import customerRoutes from "./routes/customers.js";
 import homeRoutes from "./routes/home.js";
 import userRoutes from "./routes/users.js";
 import cookieParser from "cookie-parser";
@@ -36,9 +37,10 @@ app.get("/", (req, res) => {
 
 // All Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/mess", messRoutes);
 app.use("/api/home", homeRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/user/mess", messRoutes);
+app.use("/api/user/mess/customer", customerRoutes);
 
 app.listen(port, () => {
   connect();

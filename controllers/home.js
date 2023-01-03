@@ -1,6 +1,7 @@
 import Mess from "../models/Mess.js";
 import Review from "../models/Review.js";
 import Customer from "../models/Customer.js";
+import { createError } from "../error.js";
 
 export const search = async (req, res, next) => {
   const query = req.query.q;
@@ -8,6 +9,8 @@ export const search = async (req, res, next) => {
     const messResults = await Mess.find({
       pincode: query,
     });
+    if (!messResults)
+      return next(createError(404, "There are no mess in your area"));
     res.status(200).json(messResults);
   } catch (err) {
     next(err);
@@ -16,20 +19,37 @@ export const search = async (req, res, next) => {
 
 export const addReview = async (req, res, next) => {
   try {
-    const customer = Customer.find({ phoneNo: req.params.phoneNo });
-    if (!customer) return next(createError(404, "You are not authenticated"));
-    if (req.params.messId === customer.messId) {
-      const newReview = new Review({
-        userId: req.user.id,
-        messId: customer.messId,
-        custId: customer.id,
-        ...req.body,
-      });
-      const savedReview = await newReview.save();
-      res.status(200).send(savedReview);
-    } else {
-      return next(createError(403, "You can update only your customer!"));
-    }
+    const customer = await Customer.findOne({
+      $and: [
+        { messId: { $in: [req.body.messId] } },
+        { phoneNo: { $in: [req.body.phoneNo] } },
+      ],
+    });
+    if (!customer)
+      return next(
+        createError(
+          404,
+          "You cannot give review to the mess you haven't subscribed!"
+        )
+      );
+    const newReview = new Review({
+      userId: customer.userId,
+      messId: req.body.messId,
+      custId: customer.id,
+      ...req.body,
+    });
+    const savedReview = await newReview.save();
+    res.status(200).send(savedReview);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ messId: req.params.id });
+    if (!reviews) return next(createError(404, "No Plan is there to display!"));
+    res.status(200).json(reviews);
   } catch (err) {
     next(err);
   }

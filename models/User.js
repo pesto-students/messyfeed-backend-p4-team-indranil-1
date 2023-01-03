@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+    },
     phoneNo: {
       type: Number,
       required: true,
@@ -27,10 +31,6 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-    },
-    userId: {
-      type: String,
-      required: true,
     },
   },
   { timestamps: true }
