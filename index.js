@@ -44,5 +44,5 @@ app.use("/api/user/mess/customer", customerRoutes);
 
 app.listen(port, () => {
   connect();
-  console.log("server is live.......");
+  console.log(`server is live on port ${port}`);
 });
