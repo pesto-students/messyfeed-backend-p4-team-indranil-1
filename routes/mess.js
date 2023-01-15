@@ -23,7 +23,7 @@ router.put("/:id", verifyToken, updateMess);
 router.delete("/:id", verifyToken, deleteMess);
 
 //View mess
-router.get("/:id", verifyToken, getMess);
+router.get("/:id", getMess);
 
 //Add new mess plan
 router.post("/plan", verifyToken, addPlan);
