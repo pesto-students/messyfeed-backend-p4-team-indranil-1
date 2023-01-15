@@ -13,6 +13,9 @@ import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
+// View all mess plans
+router.get("/plans", verifyToken, getPlans);
+
 //Register mess
 router.post("/", verifyToken, addMess);
 
@@ -35,6 +38,6 @@ router.put("/plan/:id", verifyToken, updatePlan);
 router.delete("/plan/:id", verifyToken, deletePlan);
 
 //View all mess plans
-router.get("/plans", verifyToken, getPlans);
+// router.get("/plans", verifyToken, getPlans);
 
 export default router;

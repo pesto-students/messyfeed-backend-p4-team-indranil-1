@@ -13,6 +13,12 @@ import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
+//Send OTP to customer
+router.put("/sendOtp", verifyToken, sendOtp);
+
+//Validate OTP
+router.put("/validateOtp", verifyToken, validateOtp);
+
 //Create new customer
 router.post("/", verifyToken, addCustomer);
 
@@ -27,11 +33,5 @@ router.get("/all", verifyToken, allCustomers);
 
 //Get a customer
 router.get("/:id", verifyToken, getCustomer);
-
-//Send OTP to customer
-router.put("/sendOtp", verifyToken, sendOtp);
-
-//Validate OTP
-router.put("/validateOtp", verifyToken, validateOtp);
 
 export default router;

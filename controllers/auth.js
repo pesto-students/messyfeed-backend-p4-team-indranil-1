@@ -77,6 +77,7 @@ export const changePassword = async (req, res) => {
     res.status(200).json("Password changed successfully");
   } catch (err) {
     console.log("Error:", err.message);
+    return err;
   }
 };
 
@@ -89,5 +90,6 @@ export const signout = async (req, res) => {
     res.status(200).json("Logged out successfully");
   } catch (err) {
     console.log("Error:", err.message);
+    return err;
   }
 };
