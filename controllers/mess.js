@@ -113,3 +113,16 @@ export const getPlans = async (req, res, next) => {
     next(err);
   }
 };
+
+
+// this for all users 
+export const getMessPlans = async (req, res, next) => {
+  try {
+    const messId = req.params.id;
+    const plans = await Plan.find({ messId });
+    if (!plans) return next(createError(404, "No Plan is there to display!"));
+    res.status(200).json(plans);
+  } catch (err) {
+    next(err);
+  }
+};
