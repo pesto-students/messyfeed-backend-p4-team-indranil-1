@@ -5,13 +5,13 @@ import { createError } from "../error.js";
 //Update User
 export const updateUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req?.user?.id);
     if (!user) return createError(404, "User not found!");
-    if (req.user.id === user.id) {
+    if (req?.user?.id === user?.id) {
       const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
+        req?.user?.id,
         {
-          $set: req.body,
+          $set: req?.body,
         },
         { new: true }
       );
@@ -27,10 +27,10 @@ export const updateUser = async (req, res) => {
 //Delete User
 export const deleteUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req?.user?.id);
     if (!user) return createError(404, "User not found!");
-    if (req.user.id === user.id) {
-      await User.findByIdAndDelete(req.params.id);
+    if (req?.user?.id === user?.id) {
+      await User.findByIdAndDelete(req?.user?.id);
       res.status(200).json("The User has been deleted");
     } else {
       return createError(403, "You can delete only your Profile!");
@@ -43,7 +43,7 @@ export const deleteUser = async (req, res) => {
 //get an User
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req?.user?.id);
     if (!user) return createError(404, "User not found!");
     if (req.user.role === "admin" || req.user.id === user.id) {
       res.status(200).json(user);

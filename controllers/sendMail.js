@@ -27,11 +27,18 @@
 // };
 
 //------Mailgun logic to send Email ------
+import mailgun from "mailgun-js";
 
-let mailgun = require("mailgun-js")({
-  apiKey: process.env.API_KEY,
-  domain: process.env.DOMAIN,
+console.log(process.env.API_KEY);
+const mg = mailgun({
+  apiKey: "1bd2de10597d721671d8615dec51058b-4c2b2223-bdab168c",
+  domain: "sandbox0203d14fe2b346d5959f3a5d87d685de.mailgun.org",
 });
+
+// const mailgun = require("mailgun-js")({
+//   apiKey: process.env.API_KEY,
+//   domain: process.env.DOMAIN,
+// });
 
 const mgMail = function (
   sender_email,
@@ -46,7 +53,7 @@ const mgMail = function (
     text: email_body,
   };
 
-  mailgun.messages().send(data, (error, body) => {
+  mg.messages().send(data, (error, body) => {
     if (error) console.log(error);
     else console.log(body);
   });

@@ -20,13 +20,13 @@ router.get("/plans", verifyToken, getPlans);
 router.post("/", verifyToken, addMess);
 
 //Update mess
-router.put("/:id", verifyToken, updateMess);
+router.put("/", verifyToken, updateMess);
 
 //Delete mess
-router.delete("/:id", verifyToken, deleteMess);
+router.delete("/", verifyToken, deleteMess);
 
 //View mess
-router.get("/:id", verifyToken, getMess);
+router.get("/", verifyToken, getMess);
 
 //Add new mess plan
 router.post("/plan", verifyToken, addPlan);
