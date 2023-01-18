@@ -14,16 +14,22 @@ import { verifyToken } from "../verifyToken.js";
 
 const router = express.Router();
 
+// View all mess plans
+router.get("/plans", verifyToken, getPlans);
+
 //Register mess
 router.post("/", verifyToken, addMess);
 
 //Update mess
-router.put("/:id", verifyToken, updateMess);
+router.put("/", verifyToken, updateMess);
 
 //Delete mess
-router.delete("/:id", verifyToken, deleteMess);
+router.delete("/", verifyToken, deleteMess);
 
 //View mess
+
+//router.get("/", verifyToken, getMess);
+
 router.get("/:id", getMess);
 
 //Add new mess plan
@@ -36,7 +42,7 @@ router.put("/plan/:id", verifyToken, updatePlan);
 router.delete("/plan/:id", verifyToken, deletePlan);
 
 //View all mess plans
-router.get("/plans", verifyToken, getPlans);
+// router.get("/plans", verifyToken, getPlans);
 
 // all plans for for all users 
 router.get("/plans/:id", getMessPlans);

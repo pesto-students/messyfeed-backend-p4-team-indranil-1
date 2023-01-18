@@ -10,13 +10,13 @@ import { verifyToken } from "../verifyToken.js";
 const router = express.Router();
 
 //Update User
-router.put("/:id", verifyToken, updateUser);
+router.put("/", verifyToken, updateUser);
 
 //Delete User
-router.delete("/:id", verifyToken, deleteUser);
+router.delete("/", verifyToken, deleteUser);
 
 //get an User
-router.get("/:id", verifyToken, getUser);
+router.get("/", verifyToken, getUser);
 
 //Delete the review
 router.delete("/review/:id", verifyToken, deleteReview);
