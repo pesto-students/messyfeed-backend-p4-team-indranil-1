@@ -1,11 +1,17 @@
 import Customer from "../models/Customer.js";
+import Mess from "../models/Mess.js";
 import Attendance from "../models/Attendance.js";
 import { createError } from "../error.js";
 import { sendMail } from "./sendMail.js";
 
 //Add Customer
 export const addCustomer = async (req, res) => {
-  const newCustomer = new Customer({ userId: req.user.id, ...req.body });
+  const mess = await Mess.findOne({ userId: req?.user?.id });
+  const newCustomer = new Customer({
+    userId: req.user.id,
+    messId: mess?.id,
+    ...req.body,
+  });
   try {
     const savedCustomer = await newCustomer.save();
     res.status(200).json(savedCustomer);
@@ -66,8 +72,9 @@ export const getCustomer = async (req, res) => {
 //Get all customers under a mess
 export const allCustomers = async (req, res) => {
   try {
-    const customers = await Customer.findOne({ userId: req.user.id });
+    const customers = await Customer.find({ userId: req?.user?.id });
     if (!customers) return createError(404, "No customer is there to display!");
+    console.log(customers);
     res.status(200).json(customers);
   } catch (err) {
     return err;

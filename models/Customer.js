@@ -21,7 +21,7 @@ const customerSchema = new mongoose.Schema(
       unique: true,
     },
     address: {
-      type: String,
+      type: Object,
     },
     paymentMode: {
       type: String,

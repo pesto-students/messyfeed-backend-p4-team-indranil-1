@@ -14,7 +14,7 @@ export const addMess = async (req, res) => {
       return err;
     }
   } else {
-    res.status(401).send({
+    res.status(401).json({
       message: "We are currently not supporting multiple messes for one owner!",
     });
   }
