@@ -40,6 +40,8 @@ export const addNewReview = async (req, res) => {
     res.status(200).send(savedReview);
   } catch (err) {
     return err;
+  }
+};
 
 export const addReview = async (req, res, next) => {
   const errors = validationResult(req);
