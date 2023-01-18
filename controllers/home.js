@@ -60,3 +60,15 @@ export const getReviews = async (req, res, next) => {
     next(err);
   }
 };
+
+export const isReviewed = async (req, res, next) => {
+  try {
+    const customer = await Customer.findOne({ email: req.body.email });
+    const reviews = await Review.find({ custId: customer._id });
+    console.log(reviews);
+    reviews && res.status(200).json({ isCheck: true });
+    !reviews && res.status(200).send("not present");
+  } catch (err) {
+    next(err);
+  }
+};
