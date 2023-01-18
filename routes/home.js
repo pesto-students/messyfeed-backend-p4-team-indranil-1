@@ -1,5 +1,10 @@
 import express from "express";
-import { addReview, getReviews, search } from "../controllers/home.js";
+import {
+  addReview,
+  getReviews,
+  search,
+  isReviewed,
+} from "../controllers/home.js";
 import { body } from "express-validator";
 
 const router = express.Router();
@@ -14,6 +19,9 @@ router.post(
   body("review").isLength({ min: 10 }),
   addReview
 );
+
+// this api for checking if the custmer is give review to mess allready
+router.post("/isReviewed", isReviewed);
 
 //Get all reviews
 router.get("/reviews/:id", getReviews);
