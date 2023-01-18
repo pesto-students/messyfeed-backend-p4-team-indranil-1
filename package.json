@@ -19,11 +19,18 @@
   },
   "homepage": "https://github.com/pradipbedre/Messyfeed-apis#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^9.0.0",
+    "mailgun-js": "^0.22.0",
     "mon": "^0.0.8",
     "mongoose": "^6.8.0",
-    "node": "^19.3.0"
+    "node": "^19.3.0",
+    "nodemon": "^2.0.20"
   }
 }
