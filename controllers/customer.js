@@ -74,7 +74,7 @@ export const allCustomers = async (req, res) => {
   try {
     const customers = await Customer.find({ userId: req?.user?.id });
     if (!customers) return createError(404, "No customer is there to display!");
-    console.log(customers);
+    //console.log(customers);
     res.status(200).json(customers);
   } catch (err) {
     return err;
@@ -88,7 +88,7 @@ export const sendOtp = async (req, res) => {
     if (req.user.id === customer.userId) {
       // const otp = 123456;
       const otp = Math.floor(100000 + Math.random() * 900000);
-      console.log(otp);
+      //console.log(otp);
       const updatedCustomer = await Customer.findByIdAndUpdate(
         customer.id,
         {
@@ -98,7 +98,7 @@ export const sendOtp = async (req, res) => {
       );
       const mailBody = "OTP: " + otp;
       const result = await sendMail(mailBody, req.body.email);
-      console.log("Result -- ", result);
+      //console.log("Result -- ", result);
       res.status(200).json(updatedCustomer);
       // res.status(200).json(otp);
     } else {

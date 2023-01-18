@@ -28,7 +28,7 @@ router.delete("/", verifyToken, deleteMess);
 
 //View mess
 
-//router.get("/", verifyToken, getMess);
+router.get("/", verifyToken, getMess);
 
 router.get("/:id", getMess);
 
