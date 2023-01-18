@@ -2,6 +2,7 @@ import Mess from "../models/Mess.js";
 import Review from "../models/Review.js";
 import Customer from "../models/Customer.js";
 import { createError } from "../error.js";
+import { validationResult } from "express-validator";
 
 export const search = async (req, res) => {
   const query = req.query.q;
@@ -16,7 +17,7 @@ export const search = async (req, res) => {
   }
 };
 
-export const addReview = async (req, res) => {
+export const addNewReview = async (req, res) => {
   try {
     const customer = await Customer.findOne({
       $and: [
@@ -39,6 +40,37 @@ export const addReview = async (req, res) => {
     res.status(200).send(savedReview);
   } catch (err) {
     return err;
+
+export const addReview = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() });
+  } else {
+    try {
+      const customer = await Customer.findOne({
+        $and: [
+          { messId: { $in: [req.body.messId] } },
+          { email: { $in: [req.body.email] } },
+        ],
+      });
+      if (!customer)
+        return next(
+          createError(
+            404,
+            "You cannot give review to the mess you haven't subscribed!"
+          )
+        );
+      const newReview = new Review({
+        userId: customer.userId,
+        messId: req.body.messId,
+        custId: customer.id,
+        ...req.body,
+      });
+      const savedReview = await newReview.save();
+      res.status(200).send(savedReview);
+    } catch (err) {
+      next(err);
+    }
   }
 };
 

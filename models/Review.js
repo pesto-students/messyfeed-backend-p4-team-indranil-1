@@ -6,6 +6,10 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    rating: {
+      type: Number,
+      require: true,
+    },
     messId: {
       type: String,
       required: true,

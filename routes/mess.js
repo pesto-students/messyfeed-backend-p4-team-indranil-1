@@ -8,6 +8,7 @@ import {
   getPlans,
   updateMess,
   updatePlan,
+  getMessPlans,
 } from "../controllers/mess.js";
 import { verifyToken } from "../verifyToken.js";
 
@@ -26,7 +27,10 @@ router.put("/", verifyToken, updateMess);
 router.delete("/", verifyToken, deleteMess);
 
 //View mess
-router.get("/", verifyToken, getMess);
+
+//router.get("/", verifyToken, getMess);
+
+router.get("/:id", getMess);
 
 //Add new mess plan
 router.post("/plan", verifyToken, addPlan);
@@ -39,5 +43,8 @@ router.delete("/plan/:id", verifyToken, deletePlan);
 
 //View all mess plans
 // router.get("/plans", verifyToken, getPlans);
+
+// all plans for for all users 
+router.get("/plans/:id", getMessPlans);
 
 export default router;
