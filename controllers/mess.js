@@ -67,6 +67,16 @@ export const getMess = async (req, res) => {
   }
 };
 
+export const getMessCommon = async (req, res) => {
+  try {
+    const mess = await Mess.findOne(req.param.id);
+    if (!mess) return createError(404, "Mess not found!");
+    res.status(200).json(mess);
+  } catch (err) {
+    return err;
+  }
+};
+
 export const addPlan = async (req, res) => {
   const mess = await Mess.findOne({ userId: req?.user?.id });
   const newPlan = new Plan({
@@ -131,8 +141,7 @@ export const getPlans = async (req, res) => {
   }
 };
 
-
-// this for all users 
+// this for all users
 export const getMessPlans = async (req, res, next) => {
   try {
     const messId = req.params.id;
