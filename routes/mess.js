@@ -31,8 +31,7 @@ router.delete("/", verifyToken, deleteMess);
 //View mess
 router.get("/", verifyToken, getMessWithToken);
 
-router.get("/:id", getMess);
-
+// get mess for customer
 router.get("/", verifyToken, getMess);
 
 // get mess details
