@@ -32,7 +32,7 @@ const connect = () => {
 
 // Default Route
 app.get("/", (req, res) => {
-  res.send(`you are live on ${port}...`);
+  res.send(`you are live on Messyfeed...`);
 });
 
 // All Routes
@@ -44,5 +44,5 @@ app.use("/api/user/mess/customer", customerRoutes);
 
 app.listen(port, () => {
   connect();
-  console.log(`server is live on port ${port}`);
+  console.log(`server is live on`);
 });

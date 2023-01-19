@@ -5,6 +5,7 @@ import { createError } from "../error.js";
 import { validationResult } from "express-validator";
 
 export const search = async (req, res) => {
+  console.log("Done");
   const query = req.query.q;
   try {
     const messResults = await Mess.find({

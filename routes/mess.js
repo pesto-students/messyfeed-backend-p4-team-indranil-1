@@ -28,6 +28,7 @@ router.put("/", verifyToken, updateMess);
 router.delete("/", verifyToken, deleteMess);
 
 //View mess
+
 router.get("/", verifyToken, getMessWithToken);
 
 router.get("/:id", getMess);
@@ -42,7 +43,7 @@ router.put("/plan/:id", verifyToken, updatePlan);
 router.delete("/plan/:id", verifyToken, deletePlan);
 
 //View all mess plans
-// router.get("/plans", verifyToken, getPlans);
+router.get("/plans", verifyToken, getPlans);
 
 // all plans for for all users
 router.get("/plans/:id", getMessPlans);
