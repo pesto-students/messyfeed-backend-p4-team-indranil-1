@@ -82,14 +82,15 @@ export const allCustomers = async (req, res) => {
 
 export const sendOtp = async (req, res) => {
   try {
-    const customer = await Customer.findOne({ email: req.body.email });
+    const customer = await Customer.findOne({
+      $and: [{ email: req?.body?.email }, { userId: req?.user?.id }],
+    });
     if (!customer) return createError(404, "Please enter valid email id!");
-    if (req.user.id === customer.userId) {
+    if (req?.user?.id === customer?.userId) {
       // const otp = 123456;
       const otp = Math.floor(100000 + Math.random() * 900000);
-      //console.log(otp);
       const updatedCustomer = await Customer.findByIdAndUpdate(
-        customer.id,
+        customer?.id,
         {
           otp: otp,
         },
@@ -113,12 +114,14 @@ export const sendOtp = async (req, res) => {
 
 export const validateOtp = async (req, res) => {
   try {
-    const customer = await Customer.findOne({ email: req.body.email });
+    const customer = await Customer.findOne({
+      $and: [{ email: req?.body?.email }, { userId: req?.user?.id }],
+    });
     if (!customer) return createError(404, "Please enter valid email id!");
-    if (req.user.id === customer.userId) {
-      if (customer.otp && req.body.otp === customer.otp) {
-        const updatedCustomer = await Customer.findByIdAndUpdate(
-          customer.id,
+    if (req?.user?.id === customer?.userId) {
+      if (customer?.otp && customer?.otp === parseInt(req?.body?.otp)) {
+        await Customer.findByIdAndUpdate(
+          customer?.id,
           {
             otp: 0,
             $inc: { mealsLeft: -1 },
@@ -126,13 +129,13 @@ export const validateOtp = async (req, res) => {
           { new: true }
         );
         const newEntry = new Attendance({
-          userId: req.user.id,
-          messId: customer.messId,
-          custId: customer.id,
-          ...req.body,
+          userId: req?.user?.id,
+          messId: customer?.messId,
+          custId: customer?.id,
+          ...req?.body,
         });
         await newEntry.save();
-        res.status(200).json(updatedCustomer);
+        res.status(200).json(newEntry);
       } else {
         return createError(403, "Invalid OTP");
       }

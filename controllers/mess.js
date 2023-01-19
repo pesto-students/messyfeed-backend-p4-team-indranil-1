@@ -8,7 +8,6 @@ export const addMess = async (req, res) => {
     const newMess = new Mess({ userId: req?.user?.id, ...req?.body });
     try {
       const savedMess = await newMess.save();
-      console.log("Saved Messs...", savedMess);
       res.status(200).json(savedMess);
     } catch (err) {
       return err;
@@ -32,7 +31,6 @@ export const updateMess = async (req, res) => {
         },
         { new: true }
       );
-      console.log("Mess Updated.....", updatedMess);
       res.status(200).json(updatedMess);
     } else {
       return createError(403, "You can update only your mess!");
@@ -59,7 +57,7 @@ export const deleteMess = async (req, res) => {
 
 export const getMess = async (req, res) => {
   try {
-    const mess = await Mess.findOne({ userId: req?.user?.id });
+    const mess = await Mess.findById(req?.params?.id);
     if (!mess) return createError(404, "Mess not found!");
     res.status(200).json(mess);
   } catch (err) {
@@ -69,7 +67,6 @@ export const getMess = async (req, res) => {
 
 export const getMessWithToken = async (req, res) => {
   try {
-    console.log(req?.user?.id);
     const mess = await Mess.findOne({ userId: req?.user?.id });
     if (!mess) return createError(404, "Mess not found!");
     res.status(200).json(mess);
@@ -77,6 +74,7 @@ export const getMessWithToken = async (req, res) => {
     return err;
   }
 };
+
 
 export const getMessCommon = async (req, res) => {
   console.log(req.params.id);
