@@ -67,6 +67,17 @@ export const getMess = async (req, res) => {
   }
 };
 
+export const getMessWithToken = async (req, res) => {
+  try {
+    console.log(req?.user?.id);
+    const mess = await Mess.findOne({ userId: req?.user?.id });
+    if (!mess) return createError(404, "Mess not found!");
+    res.status(200).json(mess);
+  } catch (err) {
+    return err;
+  }
+};
+
 export const getMessCommon = async (req, res) => {
   console.log(req.params.id);
   try {

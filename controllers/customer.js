@@ -23,13 +23,13 @@ export const addCustomer = async (req, res) => {
 //Update Customer
 export const updateCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer?.findById(req?.params?.id);
     if (!customer) return createError(404, "Customer not found!");
-    if (req.user.id === customer.userId) {
+    if (req?.user?.id === customer?.userId) {
       const updatedCustomer = await Customer.findByIdAndUpdate(
-        req.params.id,
+        req?.params?.id,
         {
-          $set: req.body,
+          $set: req?.body,
         },
         { new: true }
       );
@@ -96,9 +96,9 @@ export const sendOtp = async (req, res) => {
         },
         { new: true }
       );
-      const mailBody = "OTP: " + otp;
-      const result = await sendMail(mailBody, req.body.email);
-      //console.log("Result -- ", result);
+      // const mailBody = "OTP: " + otp;
+      // const result = await sendMail(mailBody, req.body.email);
+      // console.log("Result -- ", result);
       res.status(200).json(updatedCustomer);
       // res.status(200).json(otp);
     } else {
