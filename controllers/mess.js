@@ -68,8 +68,9 @@ export const getMess = async (req, res) => {
 };
 
 export const getMessCommon = async (req, res) => {
+  console.log(req.params.id);
   try {
-    const mess = await Mess.findOne(req.param.id);
+    const mess = await Mess.findOne({ _id: req.params.id });
     if (!mess) return createError(404, "Mess not found!");
     res.status(200).json(mess);
   } catch (err) {
