@@ -74,7 +74,6 @@ export const allCustomers = async (req, res) => {
   try {
     const customers = await Customer.find({ userId: req?.user?.id });
     if (!customers) return createError(404, "No customer is there to display!");
-    //console.log(customers);
     res.status(200).json(customers);
   } catch (err) {
     return err;

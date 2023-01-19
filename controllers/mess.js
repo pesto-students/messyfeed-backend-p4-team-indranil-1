@@ -89,6 +89,8 @@ export const getMessCommon = async (req, res) => {
   }
 };
 
+
+
 export const addPlan = async (req, res) => {
   const mess = await Mess.findOne({ userId: req?.user?.id });
   const newPlan = new Plan({
