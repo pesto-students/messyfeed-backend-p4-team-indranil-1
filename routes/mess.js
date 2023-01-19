@@ -32,10 +32,11 @@ router.delete("/", verifyToken, deleteMess);
 router.get("/", verifyToken, getMessWithToken);
 
 router.get("/:id", getMess);
+
 router.get("/", verifyToken, getMess);
 
 // get mess details
-router.get("/:id", getMessCommon);
+router.get("/search/:id", getMessCommon);
 
 //Add new mess plan
 router.post("/plan", verifyToken, addPlan);
