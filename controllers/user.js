@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Review from "../models/Review.js";
 import { createError } from "../error.js";
+import bcrypt from "bcryptjs";
 
 //Update User
 export const updateUser = async (req, res) => {
@@ -69,6 +70,36 @@ export const deleteReview = async (req, res) => {
       return createError(403, "You can delete only your Review!");
     }
   } catch (err) {
+    return err;
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req?.user?.id);
+
+    // Check if the current password is correct
+    const validPassword = await bcrypt.compare(
+      req.body.currentPassword,
+      user.password
+    );
+
+    if (!validPassword) {
+      res.status(403).json("Invalid current password");
+    }
+
+    // Hash the new password
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.newPassword, salt);
+
+    // Update the user document with the new password
+    await User.updateOne(
+      { _id: user.id },
+      { $set: { password: hashedPassword } }
+    );
+    res.status(200).json("Password changed successfully");
+  } catch (err) {
+    console.log("Error:", err.message);
     return err;
   }
 };
