@@ -61,7 +61,8 @@ export const deleteCustomer = async (req, res) => {
 //Get a Customer
 export const getCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer.findOne({ email: req?.params?.id });
+    if (!customer) customer = await Customer.findById({ id: req?.params?.id });
     if (!customer) return createError(404, "Customer not found!");
     res.status(200).json(customer);
   } catch (err) {
@@ -87,21 +88,18 @@ export const sendOtp = async (req, res) => {
     });
     if (!customer) return createError(404, "Please enter valid email id!");
     if (req?.user?.id === customer?.userId) {
-      // const otp = 123456;
       const otp = Math.floor(100000 + Math.random() * 900000);
-      //console.log(otp);
-      const updatedCustomer = await Customer.findByIdAndUpdate(
+      await Customer.findByIdAndUpdate(
         customer?.id,
         {
           otp: otp,
         },
         { new: true }
       );
-      // const mailBody = "OTP: " + otp;
-      // const result = await sendMail(mailBody, req.body.email);
-      // console.log("Result -- ", result);
-      res.status(200).json(updatedCustomer);
-      // res.status(200).json(otp);
+      const result = sendMail(
+        `otp=${otp}, email=${req?.body?.email}, name=${customer?.name}`
+      );
+      res.status(200).json(result);
     } else {
       return createError(
         403,
