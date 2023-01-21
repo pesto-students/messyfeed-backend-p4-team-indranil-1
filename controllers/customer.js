@@ -91,7 +91,6 @@ export const deleteCustomer = async (req, res) => {
 //Get a Customer
 export const getCustomer = async (req, res) => {
   try {
-    console.log("Entered in...");
     let customer = await Customer.findOne({ email: req?.params?.id });
     if (!customer) customer = await Customer.findById(req?.params?.id);
     if (!customer)
@@ -99,7 +98,6 @@ export const getCustomer = async (req, res) => {
         statusCode: 201,
         message: "Customer is not available",
       });
-    console.log("Entered 2...", customer);
     res.status(200).json({
       statusCode: 200,
       message: customer,
@@ -138,7 +136,19 @@ export const sendOtp = async (req, res) => {
         statusCode: 201,
         message: "Please enter valid email id!",
       });
-    if (req?.user?.id === customer?.userId) {
+    else if (
+      new Date(customer?.planEndDate) < new Date() ||
+      customer.mealsLeft < 0
+    ) {
+      // console.log("Inside date checc");
+      res.status(200).json({
+        statusCode: 201,
+        message: "No plan is active",
+      });
+    }
+    // console.log("Date Check: ", new Date(customer?.planEndDate) >= new Date());
+    // }
+    else if (req?.user?.id === customer?.userId) {
       const otp = Math.floor(100000 + Math.random() * 900000);
       await Customer.findByIdAndUpdate(
         customer?.id,
@@ -162,6 +172,7 @@ export const sendOtp = async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err);
     return err;
   }
 };
