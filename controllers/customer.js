@@ -140,15 +140,11 @@ export const sendOtp = async (req, res) => {
       new Date(customer?.planEndDate) < new Date() ||
       customer.mealsLeft < 0
     ) {
-      // console.log("Inside date checc");
       res.status(200).json({
         statusCode: 201,
         message: "No plan is active",
       });
-    }
-    // console.log("Date Check: ", new Date(customer?.planEndDate) >= new Date());
-    // }
-    else if (req?.user?.id === customer?.userId) {
+    } else if (req?.user?.id === customer?.userId) {
       const otp = Math.floor(100000 + Math.random() * 900000);
       await Customer.findByIdAndUpdate(
         customer?.id,
