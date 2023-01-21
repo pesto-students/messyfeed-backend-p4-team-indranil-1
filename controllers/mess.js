@@ -1,39 +1,58 @@
 import Mess from "../models/Mess.js";
 import Plan from "../models/Plan.js";
+import Review from "../models/Review.js";
 import { createError } from "../error.js";
 
 export const addMess = async (req, res) => {
-  const messCheck = await Mess.findOne({ userId: req?.user?.id });
-  if (!messCheck) {
-    const newMess = new Mess({ userId: req?.user?.id, ...req?.body });
-    try {
-      const savedMess = await newMess.save();
-      res.status(200).json(savedMess);
-    } catch (err) {
-      return err;
-    }
-  } else {
-    res.status(401).json({
-      message: "We are currently not supporting multiple messes for one owner!",
+  const newMess = new Mess({ userId: req?.user?.id, ...req?.body });
+  try {
+    const savedMess = await newMess.save();
+    if (!savedMess)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Please check the details you have entered",
+      });
+    res.status(200).json({
+      statusCode: 200,
+      message: savedMess,
     });
+  } catch (err) {
+    return err;
   }
 };
 
 export const updateMess = async (req, res) => {
   try {
     const mess = await Mess.findOne({ userId: req?.user?.id });
-    if (!mess) return createError(404, "Mess not found!");
+    if (!mess)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Mess is not avilable",
+      });
     if (req?.user?.id === mess?.userId) {
       const updatedMess = await Mess.findByIdAndUpdate(
         mess?.id,
         {
-          $set: req.body,
+          $push: { photos: req?.body?.photos },
+          $set: {
+            address: req?.body?.address,
+            pincode: req?.body?.pincode,
+            name: req?.body?.name,
+            email: req?.body?.email,
+            contactNo: req?.body?.contactNo,
+          },
         },
         { new: true }
       );
-      res.status(200).json(updatedMess);
+      res.status(200).json({
+        statusCode: 200,
+        message: updatedMess,
+      });
     } else {
-      return createError(403, "You can update only your mess!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can update only your mess!",
+      });
     }
   } catch (err) {
     return err;
@@ -43,12 +62,22 @@ export const updateMess = async (req, res) => {
 export const deleteMess = async (req, res) => {
   try {
     const mess = await Mess.findOne({ userId: req?.user?.id });
-    if (!mess) return createError(404, "Mess not found!");
+    if (!mess)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Mess is not available",
+      });
     if (req?.user?.id === mess?.userId) {
       await Mess.findByIdAndDelete(req?.user?.id);
-      res.status(200).json("The Mess has been deleted");
+      res.status(200).json({
+        statusCode: 200,
+        message: "The Mess has been deleted",
+      });
     } else {
-      return createError(403, "You can delete only your Mess!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can delete only your mess!",
+      });
     }
   } catch (err) {
     return err;
@@ -58,7 +87,11 @@ export const deleteMess = async (req, res) => {
 export const getMess = async (req, res) => {
   try {
     const mess = await Mess.findById(req?.params?.id);
-    if (!mess) return createError(404, "Mess not found!");
+    if (!mess)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Mess is not available",
+      });
     res.status(200).json(mess);
   } catch (err) {
     return err;
@@ -68,8 +101,15 @@ export const getMess = async (req, res) => {
 export const getMessWithToken = async (req, res) => {
   try {
     const mess = await Mess.findOne({ userId: req?.user?.id });
-    if (!mess) return createError(404, "Mess not found!");
-    res.status(200).json(mess);
+    if (!mess)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Mess not found!",
+      });
+    res.status(200).json({
+      statusCode: 200,
+      message: mess,
+    });
   } catch (err) {
     return err;
   }
@@ -77,6 +117,11 @@ export const getMessWithToken = async (req, res) => {
 
 export const addPlan = async (req, res) => {
   const mess = await Mess.findOne({ userId: req?.user?.id });
+  if (!mess)
+    res.status(200).json({
+      statusCode: 201,
+      message: "Please register a mess to add plans",
+    });
   const newPlan = new Plan({
     userId: req?.user?.id,
     messId: mess?.id,
@@ -84,7 +129,10 @@ export const addPlan = async (req, res) => {
   });
   try {
     const savedPlan = await newPlan.save();
-    res.status(200).json(savedPlan);
+    res.status(200).json({
+      statusCode: 200,
+      message: savedPlan,
+    });
   } catch (err) {
     return err;
   }
@@ -93,7 +141,11 @@ export const addPlan = async (req, res) => {
 export const updatePlan = async (req, res) => {
   try {
     const plan = await Plan.findById(req?.params?.id);
-    if (!plan) return createError(404, "Plan not found!");
+    if (!plan)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Plan not found!",
+      });
     if (req?.user?.id === plan?.userId) {
       const updatedPlan = await Plan.findByIdAndUpdate(
         req?.params?.id,
@@ -102,9 +154,15 @@ export const updatePlan = async (req, res) => {
         },
         { new: true }
       );
-      res.status(200).json(updatedPlan);
+      res.status(200).json({
+        statusCode: 200,
+        message: updatedPlan,
+      });
     } else {
-      return createError(403, "You can update only your Plan!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can update only your Plan!",
+      });
     }
   } catch (err) {
     return err;
@@ -113,13 +171,23 @@ export const updatePlan = async (req, res) => {
 
 export const deletePlan = async (req, res) => {
   try {
-    const plan = await Plan.findById(req.params.id);
-    if (!plan) return createError(404, "Plan not found!");
-    if (req.user.id === plan.userId) {
+    const plan = await Plan.findById(req?.params?.id);
+    if (!plan)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Plan not found!",
+      });
+    if (req?.user?.id === plan?.userId) {
       await Plan.findByIdAndDelete(req.params.id);
-      res.status(200).json("The Plan has been deleted");
+      res.status(200).json({
+        statusCode: 200,
+        message: "The Plan has been deleted",
+      });
     } else {
-      return createError(403, "You can delete only your Plan!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can delete only your Plan!",
+      });
     }
   } catch (err) {
     return err;
@@ -129,13 +197,18 @@ export const deletePlan = async (req, res) => {
 export const getPlans = async (req, res) => {
   try {
     const plans = await Plan.find({ userId: req?.user?.id });
-    if (!plans) {
-      res.status(401).send({ message: "No Plan is there to display!!" });
-    } else {
-      res.status(200).json(plans);
-    }
+    if (!plans)
+      res.res.status(200).json({
+        statusCode: 201,
+        message: "No Plan is there to display!",
+      });
+
+    res.status(200).json({
+      statusCode: 200,
+      message: plans,
+    });
   } catch (err) {
-    return err.message;
+    return err;
   }
 };
 
@@ -148,5 +221,19 @@ export const getMessPlans = async (req, res, next) => {
     res.status(200).json(plans);
   } catch (err) {
     next(err);
+  }
+};
+
+export const getReviewsWithToken = async (req, res) => {
+  try {
+    const mess = await Mess.findOne({ userId: req?.user?.id });
+    const reviews = await Review.find({ messId: mess?.id });
+    if (!reviews)
+      res
+        .status(200)
+        .json({ statusCode: 201, message: "No reviews are there to show" });
+    res.status(200).json({ statusCode: 200, message: reviews });
+  } catch (err) {
+    return err;
   }
 };

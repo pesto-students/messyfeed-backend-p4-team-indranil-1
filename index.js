@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.js";
 import messRoutes from "./routes/mess.js";
 import customerRoutes from "./routes/customers.js";
@@ -16,6 +17,19 @@ dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+
+app.use(
+  bodyParser.urlencoded({
+    limit: "200mb",
+    parameterLimit: 100000,
+    extended: true,
+  })
+);
+app.use(
+  bodyParser.json({
+    limit: "200mb",
+  })
+);
 
 // DB Connection
 mongoose.set("strictQuery", true);

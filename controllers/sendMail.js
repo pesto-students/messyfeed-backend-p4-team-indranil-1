@@ -2,7 +2,7 @@ import SibApiV3Sdk from "sib-api-v3-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const sendMail = (otp, email, name) => {
+export const sendMail = (otp) => {
   SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
     process.env.SEND_IN_BLUE_API_KEY;
 
@@ -12,10 +12,10 @@ export const sendMail = (otp, email, name) => {
       sender: { email: "messyfeed.pesto@gmail.com", name: "MessyFeed" },
       replyTo: { email: "messyfeed.pesto@gmail.com", name: "MessyFeed" },
       to: [
-        // {
-        //   name: "Pradip Bedre",
-        //   email: "pradipbedreofficial@gmail.com",
-        // },
+        {
+          name: "Pradip Bedre",
+          email: "pradipbedreofficial@gmail.com",
+        },
         {
           name: "Dhanunjaya Ginjupalli",
           email: "dhanunjaya.lakshmi60@gmail.com",

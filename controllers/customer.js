@@ -1,12 +1,16 @@
 import Customer from "../models/Customer.js";
 import Mess from "../models/Mess.js";
 import Attendance from "../models/Attendance.js";
-import { createError } from "../error.js";
 import { sendMail } from "./sendMail.js";
 
 //Add Customer
 export const addCustomer = async (req, res) => {
   const mess = await Mess.findOne({ userId: req?.user?.id });
+  if (!mess)
+    res.status(200).json({
+      statusCode: 201,
+      message: "You cannot add customer without adding your Mess details first",
+    });
   const newCustomer = new Customer({
     userId: req.user.id,
     messId: mess?.id,
@@ -14,7 +18,12 @@ export const addCustomer = async (req, res) => {
   });
   try {
     const savedCustomer = await newCustomer.save();
-    res.status(200).json(savedCustomer);
+    if (!savedCustomer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Please check the details you enter",
+      });
+    res.status(200).json({ statusCode: 200, message: savedCustomer });
   } catch (err) {
     return err;
   }
@@ -24,7 +33,11 @@ export const addCustomer = async (req, res) => {
 export const updateCustomer = async (req, res) => {
   try {
     const customer = await Customer?.findById(req?.params?.id);
-    if (!customer) return createError(404, "Customer not found!");
+    if (!customer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Customer is not available",
+      });
     if (req?.user?.id === customer?.userId) {
       const updatedCustomer = await Customer.findByIdAndUpdate(
         req?.params?.id,
@@ -33,9 +46,17 @@ export const updateCustomer = async (req, res) => {
         },
         { new: true }
       );
-      res.status(200).json(updatedCustomer);
+      if (!updatedCustomer)
+        res.status(200).json({
+          statusCode: 201,
+          message: "Please check the details you enter",
+        });
+      res.status(200).json({ statusCode: 200, message: updatedCustomer });
     } else {
-      return createError(403, "You can update only your customer details!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can update only your customer details!",
+      });
     }
   } catch (err) {
     return err;
@@ -45,13 +66,22 @@ export const updateCustomer = async (req, res) => {
 //Delete Customer
 export const deleteCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
-    if (!customer) return createError(404, "Customer not found!");
-    if (req.user.id === customer.userId) {
-      await Customer.findByIdAndDelete(req.params.id);
-      res.status(200).json("The Customer has been deleted");
+    const customer = await Customer.findById(req?.params?.id);
+    if (!customer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Customer is not available",
+      });
+    if (req?.user?.id === customer?.userId) {
+      await Customer.findByIdAndDelete(req?.params?.id);
+      res
+        .status(200)
+        .json({ statusCode: 200, message: "The Customer has been deleted" });
     } else {
-      return createError(403, "You can delete only your Customer!");
+      res.status(200).json({
+        statusCode: 201,
+        message: "You can delete only your Customer!",
+      });
     }
   } catch (err) {
     return err;
@@ -61,10 +91,19 @@ export const deleteCustomer = async (req, res) => {
 //Get a Customer
 export const getCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findOne({ email: req?.params?.id });
-    if (!customer) customer = await Customer.findById({ id: req?.params?.id });
-    if (!customer) return createError(404, "Customer not found!");
-    res.status(200).json(customer);
+    console.log("Entered in...");
+    let customer = await Customer.findOne({ email: req?.params?.id });
+    if (!customer) customer = await Customer.findById(req?.params?.id);
+    if (!customer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Customer is not available",
+      });
+    console.log("Entered 2...", customer);
+    res.status(200).json({
+      statusCode: 200,
+      message: customer,
+    });
   } catch (err) {
     return err;
   }
@@ -74,8 +113,16 @@ export const getCustomer = async (req, res) => {
 export const allCustomers = async (req, res) => {
   try {
     const customers = await Customer.find({ userId: req?.user?.id });
-    if (!customers) return createError(404, "No customer is there to display!");
-    res.status(200).json(customers);
+    if (!customers)
+      res.status(200).json({
+        statusCode: 201,
+        message:
+          "No customer is there to display, pleasse add customer details",
+      });
+    res.status(200).json({
+      statusCode: 200,
+      message: customers,
+    });
   } catch (err) {
     return err;
   }
@@ -86,7 +133,11 @@ export const sendOtp = async (req, res) => {
     const customer = await Customer.findOne({
       $and: [{ email: req?.body?.email }, { userId: req?.user?.id }],
     });
-    if (!customer) return createError(404, "Please enter valid email id!");
+    if (!customer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Please enter valid email id!",
+      });
     if (req?.user?.id === customer?.userId) {
       const otp = Math.floor(100000 + Math.random() * 900000);
       await Customer.findByIdAndUpdate(
@@ -97,14 +148,18 @@ export const sendOtp = async (req, res) => {
         { new: true }
       );
       const result = sendMail(
-        `otp=${otp}, email=${req?.body?.email}, name=${customer?.name}`
+        // `otp=${otp}, email=${req?.body?.email}, name=${customer?.name}`
+        `${otp}`
       );
-      res.status(200).json(result);
+      res.status(200).json({
+        statusCode: 200,
+        message: "OTP sent through e-mail",
+      });
     } else {
-      return createError(
-        403,
-        "You are not authorised to send OTP to this customer!"
-      );
+      res.status(200).json({
+        statusCode: 201,
+        message: "You are not authorised to send OTP to this customer!",
+      });
     }
   } catch (err) {
     return err;
@@ -116,7 +171,11 @@ export const validateOtp = async (req, res) => {
     const customer = await Customer.findOne({
       $and: [{ email: req?.body?.email }, { userId: req?.user?.id }],
     });
-    if (!customer) return createError(404, "Please enter valid email id!");
+    if (!customer)
+      res.status(200).json({
+        statusCode: 201,
+        message: "Please enter valid email id!",
+      });
     if (req?.user?.id === customer?.userId) {
       if (customer?.otp && customer?.otp === parseInt(req?.body?.otp)) {
         await Customer.findByIdAndUpdate(
@@ -134,15 +193,21 @@ export const validateOtp = async (req, res) => {
           ...req?.body,
         });
         await newEntry.save();
-        res.status(200).json(newEntry);
+        res.status(200).json({
+          statusCode: 200,
+          message: "OTP is verified",
+        });
       } else {
-        return createError(403, "Invalid OTP");
+        res.status(200).json({
+          statusCode: 201,
+          message: "Invalid OTP",
+        });
       }
     } else {
-      return createError(
-        403,
-        "You are not authorised to access this customer!"
-      );
+      res.status(200).json({
+        statusCode: 201,
+        message: "You are not authorised to access this customer!",
+      });
     }
   } catch (err) {
     return err;
