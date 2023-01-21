@@ -5,19 +5,31 @@ import { sendMail } from "./sendMail.js";
 
 //Add Customer
 export const addCustomer = async (req, res) => {
-  const mess = await Mess.findOne({ userId: req?.user?.id });
-  if (!mess)
-    res.status(200).json({
-      statusCode: 201,
-      message: "You cannot add customer without adding your Mess details first",
-    });
-  const newCustomer = new Customer({
-    userId: req.user.id,
-    messId: mess?.id,
-    ...req.body,
-  });
   try {
+    const mess = await Mess.findOne({ userId: req?.user?.id });
+    if (!mess)
+      res.status(200).json({
+        statusCode: 201,
+        message:
+          "You cannot add customer without adding your Mess details first",
+      });
+    if (Customer?.findOne({ email: req?.body?.email }))
+      res.status(200).json({
+        statusCode: 201,
+        message: "Email id already exists",
+      });
+    if (Customer?.findOne({ phoneNo: req?.body?.phoneNo }))
+      res.status(200).json({
+        statusCode: 201,
+        message: "Phone number already exists",
+      });
+    const newCustomer = new Customer({
+      userId: req.user.id,
+      messId: mess?.id,
+      ...req.body,
+    });
     const savedCustomer = await newCustomer.save();
+    console.log(savedCustomer);
     if (!savedCustomer)
       res.status(200).json({
         statusCode: 201,
@@ -25,6 +37,7 @@ export const addCustomer = async (req, res) => {
       });
     res.status(200).json({ statusCode: 200, message: savedCustomer });
   } catch (err) {
+    console.log(err);
     return err;
   }
 };
