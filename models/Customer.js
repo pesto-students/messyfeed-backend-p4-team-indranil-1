@@ -18,7 +18,7 @@ const customerSchema = new mongoose.Schema(
     phoneNo: {
       type: Number,
       required: true,
-      unique: true,
+      // unique: true,
     },
     address: {
       type: Object,
