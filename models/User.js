@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       default: "owner",
     },
     address: {
-      type: String,
+      type: Object,
     },
   },
   { timestamps: true }

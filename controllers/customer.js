@@ -13,15 +13,17 @@ export const addCustomer = async (req, res) => {
         message:
           "You cannot add customer without adding your Mess details first",
       });
-    if (Customer?.findOne({ email: req?.body?.email }))
+    if (Customer?.findOne({ email: req?.body?.email, messId: mess?.messId }))
       res.status(200).json({
         statusCode: 201,
-        message: "Email id already exists",
+        message: "Email id already registered under this mess",
       });
-    if (Customer?.findOne({ phoneNo: req?.body?.phoneNo }))
+    if (
+      Customer?.findOne({ phoneNo: req?.body?.phoneNo, messId: mess?.messId })
+    )
       res.status(200).json({
         statusCode: 201,
-        message: "Phone number already exists",
+        message: "Phone number already exists under this mess",
       });
     const newCustomer = new Customer({
       userId: req.user.id,

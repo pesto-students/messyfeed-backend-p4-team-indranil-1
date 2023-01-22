@@ -9,7 +9,7 @@ const customerSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
     },
     gender: {
       type: String,
@@ -63,5 +63,15 @@ const customerSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// customerSchema.index(
+//   {
+//     email: 1,
+//     messId: 1,
+//   },
+//   {
+//     unique: true,
+//   }
+// );
 
 export default mongoose.model("Customer", customerSchema);
