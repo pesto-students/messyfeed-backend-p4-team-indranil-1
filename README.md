@@ -33,7 +33,7 @@ customer management, mess management, and helps mess customers to file best poss
 
 - Run the below command to start the app
 
-  `npm run dev`
+  `npm start`
 
 ## Technology Stack
  
